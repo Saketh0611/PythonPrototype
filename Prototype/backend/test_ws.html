@@ -7,40 +7,51 @@
   <body>
     <h1>WebSocket Room Test</h1>
 
+    <!-- Input: Room ID (from backend) -->
     <p>Room ID: <input id="roomId" size="40" /></p>
+
+    <!-- Text area to type code -->
     <textarea id="code" rows="10" cols="60"></textarea>
     <br />
+
+    <!-- Buttons -->
     <button onclick="connect()">Connect</button>
     <button onclick="sendCode()">Send Code Update</button>
 
+    <!-- Log output -->
     <pre id="log"></pre>
 
     <script>
-      let ws = null;
+      let ws = null; // WebSocket connection
 
+      // Append text to log window
       function log(msg) {
         document.getElementById("log").textContent += msg + "\n";
       }
 
+      // Connect to WebSocket server
       function connect() {
         const roomId = document.getElementById("roomId").value.trim();
         if (!roomId) {
-          alert("Enter a roomId first (from POST /rooms/)!");
+          alert("Enter a room ID first!");
           return;
         }
+
         ws = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
 
         ws.onopen = () => log("Connected to room " + roomId);
         ws.onmessage = (event) => log("Received: " + event.data);
         ws.onclose = () => log("WebSocket closed");
-        ws.onerror = (err) => log("WebSocket error: " + err);
+        ws.onerror = (err) => log("WebSocket error");
       }
 
+      // Send code update to backend
       function sendCode() {
         if (!ws || ws.readyState !== WebSocket.OPEN) {
           alert("Connect first!");
           return;
         }
+
         const code = document.getElementById("code").value;
         ws.send(JSON.stringify({ type: "code_update", code }));
         log("Sent code_update");
