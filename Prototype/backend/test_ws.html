@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>WS Test</title>
+  </head>
+  <body>
+    <h1>WebSocket Room Test</h1>
+
+    <p>Room ID: <input id="roomId" size="40" /></p>
+    <textarea id="code" rows="10" cols="60"></textarea>
+    <br />
+    <button onclick="connect()">Connect</button>
+    <button onclick="sendCode()">Send Code Update</button>
+
+    <pre id="log"></pre>
+
+    <script>
+      let ws = null;
+
+      function log(msg) {
+        document.getElementById("log").textContent += msg + "\n";
+      }
+
+      function connect() {
+        const roomId = document.getElementById("roomId").value.trim();
+        if (!roomId) {
+          alert("Enter a roomId first (from POST /rooms/)!");
+          return;
+        }
+        ws = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
+
+        ws.onopen = () => log("Connected to room " + roomId);
+        ws.onmessage = (event) => log("Received: " + event.data);
+        ws.onclose = () => log("WebSocket closed");
+        ws.onerror = (err) => log("WebSocket error: " + err);
+      }
+
+      function sendCode() {
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+          alert("Connect first!");
+          return;
+        }
+        const code = document.getElementById("code").value;
+        ws.send(JSON.stringify({ type: "code_update", code }));
+        log("Sent code_update");
+      }
+    </script>
+  </body>
+</html>

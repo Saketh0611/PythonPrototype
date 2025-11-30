@@ -1,0 +1,37 @@
+.app-container.dark {
+  background: #111827;
+  color: #e5e7eb;
+}
+
+.app-container.light {
+  background: #f9fafb;
+  color: #111827;
+}
+
+.cursor-row {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cursor-pill {
+  padding: 4px 8px;
+  border-radius: 9999px;
+  background: #fbbf24;
+  color: #111827;
+  font-size: 12px;
+  font-weight: 500;
+}
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;      /* vertical center */
+  justify-content: center;  /* horizontal center */
+}
+
+.app-container {
+  max-width: 1000px;
+  width: 100%;
+  padding: 24px;
+}
